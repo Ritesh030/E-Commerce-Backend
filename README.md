@@ -12,7 +12,11 @@ cd E-Commerce-Backend
 ```
 npm install
 ```
-4. Turn up the server
+4. Create a new '.env' file in the root directory and add these environmental variables in the '.env' file
+```
+PORT=value_of_the_socket_port
+```
+5. Turn up the server
 ```
 npm start
 ```
