@@ -1,5 +1,5 @@
 function ping(req,res) {
-      res.send("Hello from server")
+      res.send("Wellcome to ping url")
 }
 
 module.exports = {
