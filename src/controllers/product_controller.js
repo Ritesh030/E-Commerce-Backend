@@ -1,5 +1,17 @@
 function productController(req,res) {
-      res.send("Wellcome to product url")
+
+      //some db calls 
+
+      res.json({
+            success: true,
+            error: "",
+            data:{
+                  title:"",
+                  price:"",
+                  description:"",
+                  image:""
+            }
+      })
 }
 
 module.exports = {
