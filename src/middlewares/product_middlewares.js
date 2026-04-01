@@ -1,3 +1,5 @@
+const {StatusCodes} = require('http-status-codes')
+
 const {errorResponse} = require('../utils/error_response.js')
 const badreq = require('../errors/bad_req_error.js')
 
@@ -13,7 +15,7 @@ function productValidator(req, res, next) {
       // }
       //since this code is so much mess therefore we will write a util fuction for the error message
       if(!req.body.title){
-            return res.status(400).json(errorResponse("title is required", new badreq('something went wrong')))
+            return res.status(StatusCodes.BAD_REQUEST).json(errorResponse("title is required", new badreq('something went wrong')))
       }
 
       next()

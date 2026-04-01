@@ -1,19 +1,49 @@
+const { createProduct, getproducts } = require('../service/product_service.js')
+
 function productController(req,res) {
 
-      //some db calls 
+      try {
+            const response = createProduct(req.body)
+      
+            return res.json({
+                  success: true,
+                  error: "",
+                  data: response
+            })
+      } catch (error) {
+            console.log("error", error)
+      }
+}
 
-      res.json({
-            success: true,
-            error: "",
-            data:{
-                  title:"",
-                  price:"",
-                  description:"",
-                  image:""
-            }
-      })
+function getProducts(req,res){
+      try {
+            const allProducts = getproducts()
+            return res.json({
+                  success: true,
+                  error: "",
+                  data: allProducts
+            })
+      } catch (error) {
+            console.log("Error: ", error)
+      }
+}
+
+function getProduct(req,res){
+      try {
+            const allProducts = getproducts();
+            const prod = allProducts.filter(product => product.id == req.params.id)
+            return res.json({
+                  success: true,
+                  error: "",
+                  data: prod
+            })
+      } catch (error) {
+            console.log("Error: ", error)
+      }
 }
 
 module.exports = {
-      productController
+      productController,
+      getProducts,
+      getProduct
 }
