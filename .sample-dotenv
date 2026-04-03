@@ -1,1 +1,6 @@
 PORT=3000
+MONGODB_URL = "your_url"
+ACCESS_TOKEN_SECRET = disbdi_skndfi_ppq_kmsdnf
+ACCESS_TOKEN_EXPIRY = 15m
+REFRESH_TOKEN_SECRET = jbdsf_lajappjj_pmdsmfod
+REFRESH_TOKEN_EXPIRY = 10d

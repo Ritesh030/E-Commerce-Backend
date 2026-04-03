@@ -1,4 +1,4 @@
-const { createProduct, getproducts } = require('../service/product_service.js')
+const { createProduct, getproducts } = require('../models/product_model.js')
 
 function productController(req,res) {
 
