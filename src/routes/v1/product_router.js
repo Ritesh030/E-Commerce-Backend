@@ -1,13 +1,17 @@
 const express = require('express');
-const { productController, getProducts, getProduct } = require('../../controllers/product_controller.js')
-const { productValidator } = require('../../middlewares/product_middlewares.js')
+const upload = require('../../middlewares/multer_middleware.js');
+const { createProduct, getProducts, getProduct } = require('../../Controllers/product_controller.js');
 
 const productRouter = express.Router()
 
-productRouter.post('/',productValidator ,productController);
+productRouter.post('/create',upload.fields([
+            {
+                  name: "image",
+                  maxCount: 1
+            }
+      ]) ,createProduct);
 
 productRouter.get('/', getProducts)
-
-productRouter.get('/:id', getProduct)
+productRouter.get('/:sku', getProduct)
 
 module.exports = productRouter

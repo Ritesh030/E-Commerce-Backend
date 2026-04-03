@@ -1,7 +1,7 @@
 const { ACCESS_TOKEN_SECRET } = require("../config/server_config");
 const { User } = require("../models/user_model");
-const apiError = require("../utils/api_error");
-const asyncHandler = require("../utils/async_handler");
+const apiError = require("../utils/apiResponse_and_handlers/api_error");
+const asyncHandler = require("../utils/apiResponse_and_handlers/async_handler");
 const jwt =  require('jsonwebtoken')
 const cookie = require('cookie')
 
