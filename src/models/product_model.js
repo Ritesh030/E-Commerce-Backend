@@ -22,7 +22,8 @@ const productSchema = new Schema(
                   required: true,
                   unique: true, // BRAND-NAME-NUMBER --> "APPLE-IPHONE13-001" the number should be unique
                   uppercase: true,
-                  trim: true
+                  trim: true,
+                  index: true
             },
             price: {
                   type: Number,

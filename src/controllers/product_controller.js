@@ -8,39 +8,11 @@ const generateSKU = require('../utils/usefull_functions/generate_product_sku.js'
 const createProduct = asyncHandler(async (req, res) => {
       const { brand, name, price, description, stock } = req.body
 
-      if ([name, brand, price, stock].some((field) => field?.trim() === "")) {
-            throw new apiError(400, "All feilds are required")
+      if (!name || !brand || price == null || stock == null) {
+            throw new apiError(400, "All fields are required");
       }
 
-      const cleanName = name.trim().toLowerCase();
-      const cleanBrand = brand.trim().toLowerCase();
-
-      const existingProduct = await Product.findOne({
-            name: cleanName,
-            brand: cleanBrand
-      })
-
-      if (existingProduct) {
-            const stockToAdd = Number(stock);
-            existingProduct.stock += stockToAdd
-
-            if (existingProduct.price !== price) {
-                  existingProduct.priceHistory.push({
-                        price: existingProduct.price,
-                        date: new Date()
-                  });
-                  existingProduct.price = price;
-            }
-
-            await existingProduct.save();
-
-            return res
-                  .status(200)
-                  .json(new apiResponse(200, existingProduct, "Stock of existing product increased"))
-      }
-
-      const count = await Product.countDocuments()
-      const generatedsku = generateSKU(name, brand, count)
+      const generatedsku = generateSKU(name, brand)
 
       const imageLocalPath = req.files?.image?.[0]?.path;
       console.log(imageLocalPath)
@@ -56,8 +28,8 @@ const createProduct = asyncHandler(async (req, res) => {
       }
 
       const createdProduct = await Product.create({
-            name: cleanName,
-            brand: cleanBrand,
+            name,
+            brand,
             sku: generatedsku,
             description,
             price,
@@ -81,35 +53,70 @@ const createProduct = asyncHandler(async (req, res) => {
             .json(new apiResponse(200, product, "New Product is Created"))
 })
 
-const getProducts = asyncHandler(async (req,res) => {
-      try {
-            const products = await Product.find()
-            if(!products){
-                  throw new apiError(400,"anable to get all products")
-            }
-            return res.status(200).json(new apiResponse(200, products, "Success"))
-      } catch (error) {
-            throw new apiError(500, "Unable to get all the products")
+const getProducts = asyncHandler(async (req, res) => {
+      const page = Number(req.query.page) || 1;
+      const limit = Number(req.query.limit) || 10;
+
+      const skip = (page - 1) * limit;
+
+      const products = await Product.find()
+            .select("-priceHistory")
+            .skip(skip)
+            .limit(limit)
+            .sort({ createdAt: -1 });
+
+      const totalProducts = await Product.countDocuments();
+
+      return res.status(200).json(
+            new apiResponse(200, {
+                  products,
+                  page,
+                  totalPages: Math.ceil(totalProducts / limit),
+                  totalProducts,
+            }, "Products fetched successfully")
+      );
+});
+
+const getProduct = asyncHandler(async (req, res) => {
+  let incomingSku = req.params.sku;
+
+  if (!incomingSku) {
+    throw new apiError(400, "SKU is required");
+  }
+
+  incomingSku = incomingSku.toUpperCase();
+
+  const product = await Product.findOne({ sku: incomingSku }).select("-priceHistory");
+
+  if (!product) {
+    throw new apiError(404, "Product not found");
+  }
+
+  return res
+    .status(200)
+    .json(new apiResponse(200, product, "Product fetched successfully"));
+});
+
+const updateStock = asyncHandler(async (req, res) => {
+      const { stock }= req.body;
+
+      const incommingsku = req.params.sku?.toUpperCase()
+
+      const product = await Product.findOne({ sku: incommingsku });
+
+      if (!product) {
+            throw new apiError(404, "Product not found");
       }
-})
 
-const getProduct = asyncHandler(async (req,res) => {
-      const incommingsku = req.params.sku;
+      product.stock += Number(stock);
+      await product.save();
 
-      if(!incommingsku){
-            throw new apiError(400, "Invalid request")
-      }
-
-      const product = await Product.findOne({sku: incommingsku})
-
-      if(!product){
-            throw new apiError(400, "Product does not exists")
-      }
-      return res.status(200).json(new apiResponse(200, product, "success"))
-})
+      res.status(200).json(new apiResponse(200, product, "Stock updated"));
+});
 
 module.exports = {
       createProduct,
       getProducts,
-      getProduct
+      getProduct,
+      updateStock
 }
