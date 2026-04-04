@@ -97,7 +97,7 @@ const getProduct = asyncHandler(async (req, res) => {
     .json(new apiResponse(200, product, "Product fetched successfully"));
 });
 
-const updateStock = asyncHandler(async (req, res) => {
+const addStock = asyncHandler(async (req, res) => {
       const { stock }= req.body;
 
       const incomingsku = req.params.sku?.toUpperCase()
@@ -118,5 +118,5 @@ module.exports = {
       createProduct,
       getProducts,
       getProduct,
-      updateStock
+      addStock
 }

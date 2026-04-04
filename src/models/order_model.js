@@ -6,7 +6,6 @@ const orderSchema = new Schema(
             userId: {
                   type: Schema.Types.ObjectId,
                   ref: "User",
-                  unique: true,
                   required: true
             },
             items: [
@@ -20,6 +19,11 @@ const orderSchema = new Schema(
                               type: Number,
                               required: true,
                               min: 1
+                        },
+                        price: {
+                              type: Number,
+                              required: true,
+                              min: 0
                         }
                   }
             ],
@@ -30,9 +34,10 @@ const orderSchema = new Schema(
             },
             status: {
                   type: String,
-                  required: true
+                  enum: ["pending", "paid", "shipped", "delivered", "cancelled"],
+                  default: "pending"
             }
-      }, {timestamps: true}
+      }, { timestamps: true }
 )
 
 const Order = mongoose.model("Order", orderSchema)

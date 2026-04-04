@@ -4,7 +4,7 @@ const { addItem, removeItem, updateCart, getCart } = require('../../controllers/
 
 const cartRouter = express.Router()
 
-cartRouter.patch('/:sku/add', verifyjwt, addItem)
+cartRouter.post('/:sku/add', verifyjwt, addItem)
 cartRouter.delete('/:sku/remove', verifyjwt, removeItem)
 cartRouter.patch('/:sku/update',verifyjwt, updateCart)
 cartRouter.get('/', verifyjwt, getCart)
