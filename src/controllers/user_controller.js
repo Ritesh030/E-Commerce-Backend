@@ -1,6 +1,6 @@
 const asyncHandler = require('../utils/apiResponse_and_handlers/async_handler.js')
 const apiError = require('../utils/apiResponse_and_handlers/api_error.js')
-const { User } = require('../models/user_model.js')
+const User = require('../models/user_model.js')
 const apiResponse = require('../utils/apiResponse_and_handlers/api_response.js')
 const jwt = require('jsonwebtoken')
 const { REFRESH_TOKEN_SECRET } = require('../config/server_config.js')

@@ -100,16 +100,16 @@ const getProduct = asyncHandler(async (req, res) => {
 const updateStock = asyncHandler(async (req, res) => {
       const { stock }= req.body;
 
-      const incommingsku = req.params.sku?.toUpperCase()
+      const incomingsku = req.params.sku?.toUpperCase()
 
-      const product = await Product.findOne({ sku: incommingsku });
+      const product = await Product.findOne({ sku: incomingsku });
 
       if (!product) {
             throw new apiError(404, "Product not found");
       }
 
       product.stock += Number(stock);
-      await product.save();
+      await product.save({validateBeforeSave:false});
 
       res.status(200).json(new apiResponse(200, product, "Stock updated"));
 });
