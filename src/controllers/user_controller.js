@@ -11,9 +11,9 @@ const getCookieOptions = () => ({
 })
 
 const registerUser = asyncHandler(async (req, res) => {
-      const { username, fullname, email, password } = req.body
+      const { username, fullname, email, password, role } = req.body
 
-      if ([username, fullname, email, password].some((x) => x?.trim() === "")) {
+      if ([username, fullname, email, password, role].some((x) => x?.trim() === "")) {
             throw new apiError(400, "All fields are required")
       }
 
@@ -33,7 +33,8 @@ const registerUser = asyncHandler(async (req, res) => {
             username: username.toLowerCase(),
             fullname,
             email,
-            password
+            password,
+            role
       })
 
       const createdUser = await User.findById(userInstance._id).select("-password -refreshToken")
